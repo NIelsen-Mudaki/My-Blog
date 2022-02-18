@@ -4,7 +4,7 @@ from wtforms import (StringField, PasswordField, SubmitField,
 from wtforms.validators import InputRequired, Email, EqualTo
 from ..models import User
 
-class SignUpForm(FlaskForm):
+class SignupForm(FlaskForm):
     name = StringField("Your Name", validators=[InputRequired()])
     username = StringField("Your Username", validators=[InputRequired()])
     email = StringField("Your Email Address", validators=[InputRequired(), Email()])
@@ -13,9 +13,6 @@ class SignUpForm(FlaskForm):
     password_confirm = PasswordField("Confirm Password", validators=[InputRequired()])
     submit = SubmitField("Sign Up")
 
-    def validate_username(self, data_field):
-        if User.query.filter_by(username = data_field.data).first():
-            raise ValidationError("That username is taken")
 
 class LoginForm(FlaskForm):
     email = StringField("Your Email Address", validators=[InputRequired(), Email()])

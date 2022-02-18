@@ -1,6 +1,8 @@
 from datetime import datetime
 from flask_login import UserMixin
 from app import db, login_manager
+from werkzeug.security import (generate_password_hash,
+                               check_password_hash)
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -13,8 +15,21 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(255), unique = True)
     email = db.Column(db.String(255), unique = True, index = True)
     avatar_path = db.Column(db.String(255))
-    password_hash = db.Column(db.String(255))
+    password = db.Column(db.String(255))
     posts = db.relationship("Post", backref = "user", lazy = "dynamic")
+
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)
+
+    @classmethod
+    def get_user_posts(cls,id):
+        posts = Post.query.filter_by(user_id = id).order_by(Post.posted_at.desc()).all()
+        return posts
+
+    @classmethod
+    def get_all_posts(cls):
+        return Post.query.order_by(Post.posted_at).all()
+
 
 
 class Post(db.Model):

@@ -3,12 +3,12 @@ from flask import (render_template, redirect, url_for,
 from flask_login import login_user, logout_user, login_required
 from . import auth
 from ..models import User
-from .forms import SignUpForm, LoginForm
+from .forms import SignupForm, LoginForm
 from .. import db
 
 @auth.route("/signup", methods = ["GET", "POST"])
 def register():
-    signup_form = SignUpForm()
+    signup_form = SignupForm()
     if signup_form.validate_on_submit():
         user = User(name = signup_form.name.data, 
                     username = signup_form.username.data, 
@@ -17,7 +17,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth/login"))
     title = "Sign Up"
     return render_template("auth/signup.html", 
                             signup_form = signup_form,
@@ -26,18 +26,20 @@ def register():
 @auth.route("/login", methods = ["GET", "POST"])
 def login():
     login_form = LoginForm()
-    if login_form.validate_on_submit():
-        user = User.query.filter_by(email = login_form.email.data).first()
-        if user is not None and user.verify_password(login_form.password.data):
-            login_user(user, login_form.remember.data)
-            return redirect(request.args.get("next") or url_for("main.index"))
+    user = User.query.filter_by(email = login_form.email.data).first()
+    if user:
+        flash('user exists')
+    else:
+        if login_form.validate_on_submit():
+            user = User(username=login_form.username.data,
+                            email=login_form.email.data)
+            db.session.add(user)
+            db.session.commit()
 
-        flash("Invalid Username or Password")
-    
-    title = "Login"
-    return render_template("auth/login.html",
-                            login_form = login_form,
-                            title = title)
+            title = "Login"
+            return render_template("auth/login.html",
+                                    login_form = login_form,
+                                        title = title)
 
 @auth.route("/logout")
 @login_required
