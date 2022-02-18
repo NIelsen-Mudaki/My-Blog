@@ -1,0 +1,50 @@
+{% extends 'base.html'%}
+{% block content %}
+<header class="masthead" style="background-image: url('https://picsum.photos/1900/1267?grayscale'); margin-top: 40px;">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="post-heading">
+                    <h1>{{post.post_title}}</h1>
+                    <span class="meta">Posted by
+                        <a href="{{url_for('main.profile', id = post.user_id)}}">{{post.post_by}}</a>
+                        on {{post.posted_at.strftime('%B %d, %Y')}}
+                    </span>
+                    {%if comment_count == 1%}
+                        <small>{{comment_count}} comment</small>
+                    {%else%}
+                        <small>{{comment_count}} comments</small>
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="content">
+                    {{post.post_content | safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<hr>
+
+                    {%endfor%}
+                    <br>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+
+    </div>
+</section>
+{%endblock%}
