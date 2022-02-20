@@ -1,0 +1,19 @@
+{% extends 'base.html'%}
+
+{% from 'macro.html' import display_comments %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row col-md-12">
+        <div class="col-md-4">
+            <div class="text-white">{{wtf.quick_form(form)}}</div>
+        </div>
+        <div class="col-md-8">
+            <h2 class="text-center text-white">All comments:</h2>
+            <p>{{display_comments(comments)}}</p>
+        </div>
+    </div>
+
+</div>
+{% endblock%}

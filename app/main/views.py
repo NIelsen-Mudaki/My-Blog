@@ -4,7 +4,7 @@ from . import main
 from ..requests import get_quote
 from ..models import User, Post, Comment
 from .forms import PostForm,CommentForm
-from flask import render_template, redirect, url_for
+from flask import flash, render_template, redirect, url_for
 from flask_login import login_required, current_user
 from datetime import datetime
 
@@ -35,34 +35,16 @@ def new_post():
         db.session.add(new_post)
         db.session.commit()
 
-    
     return render_template("new-post.html",
                             post_form = post_form)
 
 
-@main.route("/posts/<int:id>", methods = ["POST", "GET"])
+@main.route("/posts", methods = ["POST", "GET"])
 @login_required
-def post(id):
-    post = Post.query.filter_by(id = id).first()
-    comments = Comment.query.filter_by(post_id = id).all()
-    comment_form = CommentForm()
+def post():
+    posts = Post.query.all()
+    user = current_user
 
-    if comment_form.validate_on_submit():
-        comment = comment_form.comment.data
-        comment_form.comment.data = ""
-        comment_alias = comment_form.alias.data
-        comment_form.alias.data = ""
-        if current_user.is_authenticated:
-            comment_alias = current_user.username
-        new_comment = Comment(comment = comment, 
-                            comment_at = datetime.now(),
-                            comment_by = comment_alias,
-                            post_id = id)
-        db.session.add(new_comment)
-        db.session.commit()
-        return redirect(url_for("main.post", id = post.id))
+    display_posts = posts
 
-    return render_template("posts.html",
-                            post = post,
-                            comments = comments,
-                            comment_form = comment_form)
+    return render_template('posts.html', posts=posts, user=user, display_posts=display_posts)

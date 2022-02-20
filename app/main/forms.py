@@ -10,5 +10,4 @@ class PostForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     comment = TextAreaField("Post Comment", validators=[InputRequired()])
-    alias = StringField("Comment by:")
     submit = SubmitField("Comment")
