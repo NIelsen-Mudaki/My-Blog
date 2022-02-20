@@ -46,7 +46,6 @@ def post(id):
     post = Post.query.filter_by(id = id).first()
     comments = Comment.query.filter_by(post_id = id).all()
     comment_form = CommentForm()
-    comment_count = len(comments)
 
     if comment_form.validate_on_submit():
         comment = comment_form.comment.data
@@ -59,11 +58,11 @@ def post(id):
                             comment_at = datetime.now(),
                             comment_by = comment_alias,
                             post_id = id)
-        new_comment.save_comment()
+        db.session.add(new_comment)
+        db.session.commit()
         return redirect(url_for("main.post", id = post.id))
 
     return render_template("posts.html",
                             post = post,
                             comments = comments,
-                            comment_form = comment_form,
-                            comment_count = comment_count)
+                            comment_form = comment_form)
