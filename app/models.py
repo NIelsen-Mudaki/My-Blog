@@ -18,6 +18,10 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(255))
     posts = db.relationship("Post", backref = "user", lazy = "dynamic")
 
+    def set_password(self, password):
+        pass_hash = generate_password_hash(password)
+        self.password = pass_hash
+
     def verify_password(self, password):
         return check_password_hash(self.password, password)
 
