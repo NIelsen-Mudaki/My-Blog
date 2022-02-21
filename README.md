@@ -1,4 +1,4 @@
-# Delani Studio
+# My Blog
 
 ## By Nielsen Mudaki
 
