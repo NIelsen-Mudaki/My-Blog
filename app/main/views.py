@@ -41,10 +41,17 @@ def new_post():
 
 @main.route("/posts", methods = ["POST", "GET"])
 @login_required
-def post():
+def posts():
     posts = Post.query.all()
     user = current_user
 
-    display_posts = posts
+    return render_template('posts.html', posts=posts, user=user)
 
-    return render_template('posts.html', posts=posts, user=user, display_posts=display_posts)
+@main.route('/profile')
+@login_required
+def user():
+    username = User.username
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        return ('User not found')
+    return render_template('profile.html', user=user)
