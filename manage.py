@@ -4,7 +4,7 @@ from app.models import User,Post
 from flask_migrate import Migrate, MigrateCommand
 
 #Creating app instance
-app = create_app('production')
+app = create_app('development')
 
 manager = Manager(app)
 manager.add_command('server',Server)
@@ -26,4 +26,5 @@ def make_shell_context():
 
 if __name__ == '__main__':
     manager.run()
+    db.create_all()
     #app.run()

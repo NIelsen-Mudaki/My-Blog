@@ -28,18 +28,26 @@
                             <h1 class="text-center">Posts</h1>
                         </div>
 
-                        <a href="/new-post"><button class="btn btn-outline-primary">New Blog Post</button></a>
+                        <a href="/new-post"><button class="btn btn-outline-primary text-center">New Blog Post</button></a>
                         
                     <div class="card-columns text-center">
-                        {% if posts %}
-                            {% for my_post in posts %}
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p>{{my_post.post}}</p>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                        {%for post in posts[::-1]%}
+                            <div class="post-preview">
+                                <a href="{{url_for('main.posts', id = post.id)}}">
+                                <h2 class="post-title">
+                                    {{post.post_title}}
+                                </h2>
+                                <h3 class="post-subtitle">
+                                    {{post.post_content | truncate (45) | safe}}
+                                </h3>
+                                </a>
+                                <p class="post-meta">Posted by
+                                {{post.post_by}} on
+                                {{post.posted_at.strftime('%B %d, %Y')}}
+                                </p>
+                            </div>
+                        <hr>
+                        {%endfor%}
                     </div>
                 </div>
             </div>
